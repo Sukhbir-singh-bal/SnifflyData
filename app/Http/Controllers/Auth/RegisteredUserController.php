@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\ApiKeyGenerator;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -19,7 +20,7 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -35,8 +36,21 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        $generatedApiKey = ApiKeyGenerator::generate();
+
+        $user->apiKeys()->create([
+            'key_hash' => $generatedApiKey['hash'],
+            'key_last4' => $generatedApiKey['last4'],
+            'name' => 'Default Key',
+            'usage_limit' => 100000,
+            'usage_count' => 0,
+        ]);
+
         Auth::login($user);
 
-        return response()->noContent();
+        $request->session()->put('new_api_key', $generatedApiKey['plain']);
+        $request->session()->put('status', 'Account created successfully.');
+
+        return redirect()->route('dashboard');
     }
 }

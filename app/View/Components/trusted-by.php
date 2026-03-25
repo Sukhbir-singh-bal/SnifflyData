@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class trusted-by extends Component
+class trustedby extends Component
 {
     /**
      * Create a new component instance.

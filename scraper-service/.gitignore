@@ -1,0 +1,6 @@
+node_modules/
+.local-browsers/
+playwright/.local-browsers/
+npm-debug.log*
+*.log
+

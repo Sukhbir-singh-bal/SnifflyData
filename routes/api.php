@@ -20,7 +20,6 @@ Route::prefix('v1')->group(function (): void {
         Route::delete('/api-keys/{id}', [ApiKeyController::class, 'destroy']);
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile', [ProfileController::class, 'update']);
-        Route::post('/scrape', [ScrapeController::class, 'store']);
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
         Route::get('/dashboard/recent-requests', [DashboardController::class, 'recentRequests']);
 
@@ -29,4 +28,8 @@ Route::prefix('v1')->group(function (): void {
             Route::patch('/users/{id}/status', [AdminUserController::class, 'updateStatus']);
         });
     });
+
+    // Public scraping endpoint (SaaS-style): authenticate with plaintext API key header.
+    Route::post('/scrape', [ScrapeController::class, 'store'])
+        ->middleware(['api.key', 'active.user']);
 });

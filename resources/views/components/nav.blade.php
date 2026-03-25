@@ -6,7 +6,8 @@
         <div class="flex items-center gap-10">
             <x-logo />
 
-            <div class="hidden md:flex items-center gap-1">
+            @if (Route::is('welcome'))
+                <div class="hidden md:flex items-center gap-1">
                 @foreach([
                     ['href' => '#features',     'label' => 'Product'],
                     ['href' => '#how-it-works', 'label' => 'How It Works'],
@@ -19,6 +20,8 @@
                 >{{ $link['label'] }}</a>
                 @endforeach
             </div>
+            @endif
+            
         </div>
 
         {{-- Right: Theme Toggle + Auth --}}

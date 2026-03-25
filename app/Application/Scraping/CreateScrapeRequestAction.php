@@ -3,21 +3,21 @@
 namespace App\Application\Scraping;
 
 use App\Jobs\ScrapeWebsiteJob;
+use App\Models\ApiKey;
 use App\Models\ScrapeRequest;
-use App\Models\User;
 
 class CreateScrapeRequestAction
 {
-    public function execute(User $user, string $url, int $apiKeyId): ScrapeRequest
+    public function execute(ApiKey $apiKey, string $url): ScrapeRequest
     {
         $scrapeRequest = ScrapeRequest::query()->create([
-            'user_id' => $user->id,
-            'api_key_id' => $apiKeyId,
+            'user_id' => $apiKey->user_id,
+            'api_key_id' => $apiKey->id,
             'url' => $url,
             'status' => ScrapeRequest::STATUS_PENDING,
         ]);
 
-        ScrapeWebsiteJob::dispatch($url, $apiKeyId, $scrapeRequest->id)
+        ScrapeWebsiteJob::dispatch($url, $apiKey->id, $scrapeRequest->id)
             ->onQueue('scraping');
 
         return $scrapeRequest;

@@ -31,4 +31,9 @@ class ApiKey extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function requests(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ScrapeRequest::class, 'api_key_id');
+    }
 }
