@@ -18,6 +18,7 @@ class ScrapeRequest extends Model
 
     protected $fillable = [
         'user_id',
+        'api_key_id',
         'url',
         'status',
         'response_time',
@@ -27,10 +28,16 @@ class ScrapeRequest extends Model
     protected function casts(): array
     {
         return [
+            'api_key_id' => 'integer',
             'response_time' => 'integer',
             'credits_used' => 'integer',
             'created_at' => 'datetime',
         ];
+    }
+
+    public function apiKey(): BelongsTo
+    {
+        return $this->belongsTo(ApiKey::class);
     }
 
     public function user(): BelongsTo

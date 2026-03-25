@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\AdminUserController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\ScrapeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -19,6 +20,7 @@ Route::prefix('v1')->group(function (): void {
         Route::delete('/api-keys/{id}', [ApiKeyController::class, 'destroy']);
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile', [ProfileController::class, 'update']);
+        Route::post('/scrape', [ScrapeController::class, 'store']);
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
         Route::get('/dashboard/recent-requests', [DashboardController::class, 'recentRequests']);
 
