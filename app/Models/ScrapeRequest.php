@@ -23,6 +23,8 @@ class ScrapeRequest extends Model
         'status',
         'response_time',
         'credits_used',
+        'response_body',
+        'error_message',
     ];
 
     protected function casts(): array

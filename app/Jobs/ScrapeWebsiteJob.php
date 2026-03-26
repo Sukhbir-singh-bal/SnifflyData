@@ -23,7 +23,7 @@ class ScrapeWebsiteJob implements ShouldQueue
      * Max HTTP attempts per job (independent from queue retry settings).
      */
     private const MAX_ATTEMPTS = 3;
-    private const HTTP_TIMEOUT_SECONDS = 10;
+    private const HTTP_TIMEOUT_SECONDS = 15;
 
     public function __construct(
         public readonly string $url,
@@ -60,6 +60,7 @@ class ScrapeWebsiteJob implements ShouldQueue
                             'status' => ScrapeRequest::STATUS_SUCCESS,
                             'response_time' => $elapsedMs,
                             'credits_used' => 1,
+                            'response_body' => mb_substr($body['html'] ?? '', 0, 10000),
                         ]);
 
                     Log::info('Scrape succeeded', [
@@ -134,6 +135,7 @@ class ScrapeWebsiteJob implements ShouldQueue
             ->whereKey($this->requestId)
             ->update([
                 'status' => ScrapeRequest::STATUS_FAILED,
+                'error_message' => mb_substr($lastFailure['error'] ?? $lastFailure['message'] ?? 'Unknown error', 0, 10000),
                 // Keep `credits_used` as-is (defaults to 0), and don't overwrite response_time unless desired.
             ]);
 

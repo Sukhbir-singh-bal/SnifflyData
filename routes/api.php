@@ -29,7 +29,9 @@ Route::prefix('v1')->group(function (): void {
         });
     });
 
-    // Public scraping endpoint (SaaS-style): authenticate with plaintext API key header.
-    Route::post('/scrape', [ScrapeController::class, 'store'])
-        ->middleware(['api.key', 'active.user']);
+    // Public scraping endpoints (SaaS-style): authenticate with plaintext API key header.
+    Route::middleware(['api.key', 'active.user'])->group(function (): void {
+        Route::post('/scrape', [ScrapeController::class, 'store']);
+        Route::get('/scrape/{id}', [ScrapeController::class, 'show']);
+    });
 });
